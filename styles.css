@@ -18,50 +18,64 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-body {
+/* ==========================================
+   RESET FULL-SCREEN (Elimina bordes flotantes)
+   ========================================== */
+html, body {
+  width: 100vw;
+  height: 100vh;
   background-color: var(--bg-color);
   color: var(--text-main);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 24px 16px;
+  overflow: hidden;
   position: relative;
-  overflow-x: hidden;
 }
 
 body::before {
   content: '';
   position: absolute;
-  width: 350px;
-  height: 350px;
+  width: 550px;
+  height: 550px;
   background: radial-gradient(circle, var(--primary-red-glow) 0%, transparent 70%);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 0;
   pointer-events: none;
-  filter: blur(50px);
+  filter: blur(70px);
 }
 
+/* ==========================================
+   CONTENEDOR APP NATIVA (Ocupa 100vw x 100vh)
+   ========================================== */
 .container {
   position: relative;
   z-index: 1;
   background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 36px 28px;
-  border-radius: 24px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
-              0 0 0 1px var(--card-border);
+  padding: 32px 24px;
+  border-radius: 0;       /* Quita bordes redondeados flotantes */
+  box-shadow: none;        /* Quita sombra de tarjeta */
+  border: none;
+  width: 100vw;            /* Ocupa todo el ancho */
+  height: 100vh;           /* Ocupa todo el alto */
+  max-width: none;         /* Elimina límite de 500px */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;        /* Scroll interno fluido si el contenido sobrepasa */
+}
+
+/* Envoltura interna opcional para centrar el flujo de trabajo en pantallas muy grandes */
+.content-wrapper {
+  max-width: 800px;
   width: 100%;
-  max-width: 500px;
+  margin: 0 auto;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
 .brand-title {
@@ -94,7 +108,7 @@ body::before {
 }
 
 .input-group {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   text-align: left;
 }
 
@@ -107,11 +121,12 @@ body::before {
   letter-spacing: 0.3px;
 }
 
+/* ZONA DE CARGA CON ÍCONO + EN ROJO */
 .drop-zone {
   display: block;
   border: 2px dashed var(--input-border);
   border-radius: 16px;
-  padding: 24px 16px;
+  padding: 28px 16px;
   text-align: center;
   background: var(--input-bg);
   cursor: pointer;
@@ -127,12 +142,17 @@ body::before {
 }
 
 .drop-zone-icon {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   margin: 0 auto 10px;
-  fill: var(--primary-red);
-  opacity: 0.9;
+  fill: var(--primary-red);  /* Aplica el rojo exacto al ícono + */
+  opacity: 0.95;
   pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.drop-zone:hover .drop-zone-icon {
+  transform: scale(1.1);
 }
 
 .drop-zone-text {
@@ -402,15 +422,19 @@ button#convertBtn {
   cursor: pointer;
   box-shadow: 0 8px 20px var(--primary-red-glow);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 6px;
+  margin-top: 10px;
+}
+
+button#convertBtn:hover {
+  background-color: var(--primary-red-hover);
+  transform: translateY(-1px);
 }
 
 /* ==========================================================
-   EXTENSION RESPONSIVE PARA PC (Mantiene intacto el móvil)
+   ADAPTABILIDAD PARA PANTALLAS GRANDES (Mantiene el Full Screen)
    ================================================---------- */
 @media (min-width: 768px) {
   .container {
-    max-width: 640px;
-    padding: 42px 34px;
+    padding: 42px 60px;
   }
 }
